@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Planning | Financial Freedom App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+    <style>
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #d35400;
+            --light-color: #f9f3ff;
+            --dark-color: #333;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            
+        }
+        .col{
+            color:var(--dark-color);
+        }
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+       
+        
+       
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #7d32a8;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #b94b00;
+        }
+        
+        .result-box {
+            background-color: var(--light-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .result-box.active {
+            display: block;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+        }
+        
+        .result-details {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            margin-top: 1.5rem;
+            height: 300px;
+        }
+        
+        .investment-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .investment-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .investment-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .investment-value {
+            font-size: 1.25rem;
+            color: var(--success-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .investment-info {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+
+        }
+        
+        .tab {
+           padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            color: var(--primary-color);
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .investment-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav ul li {
+                margin-bottom: 0.2rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-purple-900 via-pink-700 to-purple-500 text-white">
+    
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation (Same as in home.html) -->
+        <aside class="w-64 bg-white text-gray-900 p-6 shadow-xl">
+            <div class="flex items-center space-x-2 mb-6">
+                <img src="/frontend/images/logo.jpg" alt="Logo" class="rounded-full" style="margin-left:0"><br>
+                <h2 class="text-xl font-semibold text-purple-800">AlphaFem</h2>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-gray-500">Welcome,</p>
+                <p class="font-bold text-purple-800" id="user-name">Name</p>
+            </div>
+            
+            <nav class="mt-6">
+                <ul>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="home.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>Home</a></li>
+                    <li class="py-2 px-4 rounded-lg bg-purple-200 mb-2 cursor-pointer"><a href="expenses.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Expenses</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="budget.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>Budget</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="investments.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>Investments</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="learn.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Learn</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="community.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>Community</a></li>
+                </ul>
+            </nav>
+            <div class="mt-8">
+                <button id="logout-btn" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>Logout</button>
+            </div>
+        </aside>
+
+    <main class="container">
+        <h1 class="page-title">Investment Planning</h1>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="portfolio">Portfolio Tracker</div>
+            <div class="tab" data-tab="sip">SIP Calculator</div>
+            <div class="tab" data-tab="emi">EMI Calculator</div>
+        </div>
+        <div class="col">
+        <div id="portfolio-tab" class="tab-content active" >
+            <div class="card">
+                <h2 class="card-title">Your Investment Portfolio</h2>
+                <p>Track and manage all your investments in one place</p>
+                
+                <div class="investment-cards">
+                    <div class="investment-card">
+                        <div class="investment-title">Mutual Fund - Equity</div>
+                        <div class="investment-value">₹25,000</div>
+                        <div class="investment-info">
+                            <p>Monthly SIP: ₹3,000</p>
+                            <p>Returns: 12.5% (YTD)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="investment-card">
+                        <div class="investment-title">Fixed Deposit</div>
+                        <div class="investment-value">₹50,000</div>
+                        <div class="investment-info">
+                            <p>Interest: 7% p.a.</p>
+                            <p>Maturity: 15/06/2025</p>
+                        </div>
+                    </div>
+                    
+                    <div class="investment-card">
+                        <div class="investment-title">Gold</div>
+                        <div class="investment-value">₹15,000</div>
+                        <div class="investment-info">
+                            <p>Quantity: 3g</p>
+                            <p>Returns: 8.2% (YTD)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <p>Portfolio Growth Chart</p>
+                    <img src="/api/placeholder/800/300" alt="Portfolio Growth Chart" />
+                </div>
+                
+                <button class="btn" id="add-investment-btn">Add New Investment</button>
+            </div>
+        </div>
+        
+        <div id="sip-tab" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">SIP Calculator</h2>
+                <p>Plan your mutual fund investments and see potential returns</p>
+                
+                <div class="form-group">
+                    <label for="sip-amount">Monthly Investment (₹)</label>
+                    <input type="number" id="sip-amount" placeholder="Enter monthly investment amount" value="3000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sip-period">Investment Period (Years)</label>
+                    <input type="number" id="sip-period" placeholder="Enter period in years" value="10">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sip-rate">Expected Annual Return (%)</label>
+                    <input type="number" id="sip-rate" placeholder="Enter expected annual return" value="12">
+                </div>
+                
+                <button class="btn" id="calculate-sip-btn">Calculate Returns</button>
+                
+                <div class="result-box" id="sip-result">
+                    <div class="result-title">Total Value after <span id="sip-years">10</span> years</div>
+                    <div class="result-value">₹<span id="sip-value">6,58,751</span></div>
+                    
+                    <div class="result-details">
+                        <p>Total Investment: ₹<span id="total-invested">3,60,000</span></p>
+                        <p>Wealth Gained: ₹<span id="wealth-gained">2,98,751</span></p>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <img src="/api/placeholder/800/300" alt="SIP Growth Chart" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="emi-tab" class="tab-content">
+            <div class="card">
+                <h2 class="card-title">EMI Calculator</h2>
+                <p>Plan your loans and calculate monthly EMI payments</p>
+                
+                <div class="form-group">
+                    <label for="loan-type">Loan Type</label>
+                    <select id="loan-type">
+                        <option value="car">Car Loan</option>
+                        <option value="home">Home Loan</option>
+                        <option value="personal">Personal Loan</option>
+                        <option value="education">Education Loan</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loan-amount">Loan Amount (₹)</label>
+                    <input type="number" id="loan-amount" placeholder="Enter loan amount" value="500000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="interest-rate">Interest Rate (% p.a.)</label>
+                    <input type="number" id="interest-rate" placeholder="Enter interest rate" value="9">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loan-tenure">Loan Tenure (Years)</label>
+                    <input type="number" id="loan-tenure" placeholder="Enter loan tenure in years" value="5">
+                </div>
+                
+                <button class="btn" id="calculate-emi-btn">Calculate EMI</button>
+                
+                <div class="result-box" id="emi-result">
+                    <div class="result-title">Monthly EMI</div>
+                    <div class="result-value">₹<span id="emi-value">10,377</span></div>
+                    
+                    <div class="result-details">
+                        <p>Total Interest Payable: ₹<span id="total-interest">1,22,620</span></p>
+                        <p>Total Payment (Principal + Interest): ₹<span id="total-payment">6,22,620</span></p>
+                        <p>Affordability: <span id="affordability" style="color:var(--success-color);">Good (20.8% of income)</span></p>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <img src="/api/placeholder/800/300" alt="Loan Breakup Chart" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <script>
+        // Tab Switching Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and tab contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    // Add active class to current tab and tab content
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // SIP Calculator
+            const calculateSipBtn = document.getElementById('calculate-sip-btn');
+            calculateSipBtn.addEventListener('click', calculateSIP);
+            
+            // EMI Calculator
+            const calculateEmiBtn = document.getElementById('calculate-emi-btn');
+            calculateEmiBtn.addEventListener('click', calculateEMI);
+        });
+        
+        // SIP Calculator Function
+        function calculateSIP() {
+            const sipAmount = parseFloat(document.getElementById('sip-amount').value);
+            const sipPeriod = parseFloat(document.getElementById('sip-period').value);
+            const sipRate = parseFloat(document.getElementById('sip-rate').value);
+            
+            // Monthly rate
+            const monthlyRate = sipRate / 12 / 100;
+            const months = sipPeriod * 12;
+            
+            // SIP formula: P * ((1 + r)^n - 1) / r * (1 + r)
+            const futureValue = sipAmount * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+            
+            const totalInvested = sipAmount * months;
+            const wealthGained = futureValue - totalInvested;
+            
+            // Update the result display
+            document.getElementById('sip-years').textContent = sipPeriod;
+            document.getElementById('sip-value').textContent = Math.round(futureValue).toLocaleString('en-IN');
+            document.getElementById('total-invested').textContent = totalInvested.toLocaleString('en-IN');
+            document.getElementById('wealth-gained').textContent = Math.round(wealthGained).toLocaleString('en-IN');
+            
+            // Show the result box
+            document.getElementById('sip-result').classList.add('active');
+        }
+        
+        // EMI Calculator Function
+        function calculateEMI() {
+            const loanAmount = parseFloat(document.getElementById('loan-amount').value);
+            const interestRate = parseFloat(document.getElementById('interest-rate').value);
+            const loanTenure = parseFloat(document.getElementById('loan-tenure').value);
+            
+            // Monthly interest rate
+            const monthlyRate = interestRate / 12 / 100;
+            const months = loanTenure * 12;
+            
+            // EMI formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
+            const emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+            
+            const totalPayment = emi * months;
+            const totalInterest = totalPayment - loanAmount;
+            
+            // Assume monthly income of ₹50,000 (from example)
+            const monthlyIncome = 50000;
+            const affordabilityRatio = (emi / monthlyIncome) * 100;
+            let affordabilityText = "";
+            let affordabilityColor = "";
+            
+            if (affordabilityRatio <= 30) {
+                affordabilityText = `Good (${affordabilityRatio.toFixed(1)}% of income)`;
+                affordabilityColor = "var(--success-color)";
+            } else if (affordabilityRatio <= 40) {
+                affordabilityText = `Moderate (${affordabilityRatio.toFixed(1)}% of income)`;
+                affordabilityColor = "var(--warning-color)";
+            } else {
+                affordabilityText = `High Risk (${affordabilityRatio.toFixed(1)}% of income)`;
+                affordabilityColor = "var(--error-color)";
+            }
+            
+            // Update the result display
+            document.getElementById('emi-value').textContent = Math.round(emi).toLocaleString('en-IN');
+            document.getElementById('total-interest').textContent = Math.round(totalInterest).toLocaleString('en-IN');
+            document.getElementById('total-payment').textContent = Math.round(totalPayment).toLocaleString('en-IN');
+            
+            const affordabilityElement = document.getElementById('affordability');
+            affordabilityElement.textContent = affordabilityText;
+            affordabilityElement.style.color = affordabilityColor;
+            
+            // Show the result box
+            document.getElementById('emi-result').classList.add('active');
+        }
+    </script>
+</body>
+</html>

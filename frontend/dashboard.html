@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Financial Empowerment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles/styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-purple-900 via-pink-700 to-purple-500 text-white">
+    
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation (Same as in home.html) -->
+        <aside class="w-64 bg-white text-gray-900 p-6 shadow-xl">
+            <div class="flex items-center space-x-2 mb-6">
+                <img src="/frontend/images/logo.jpg" alt="Logo" class="rounded-full" style="margin-left:0"><br>
+                <h2 class="text-xl font-semibold text-purple-800">AlphaFem</h2>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-gray-500">Welcome,</p>
+                <p class="font-bold text-purple-800" id="user-name">Name</p>
+            </div>
+            
+            <nav class="mt-6">
+                <ul>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="home.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>Home</a></li>
+                    <li class="py-2 px-4 rounded-lg bg-purple-200 mb-2 cursor-pointer"><a href="expenses.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Expenses</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="budget.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>Budget</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="investments.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>Investments</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="learn.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>Learn</a></li>
+                    <li class="py-2 px-4 rounded-lg hover:bg-purple-200 mb-2 cursor-pointer"><a href="community.html" class="flex items-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>Community</a></li>
+                </ul>
+            </nav>
+            <div class="mt-8">
+                <button id="logout-btn" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-700 transition flex items-center justify-center"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>Logout</button>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-8">
+            <h1 class="text-3xl font-bold">Welcome to Your Financial Dashboard</h1>
+            <div class="grid grid-cols-3 gap-6 mt-6">
+                <div class="bg-white text-gray-900 p-6 rounded-xl shadow-lg hover:scale-105 transition">
+                    <h3 class="text-xl font-semibold text-purple-800">Total Balance</h3>
+                    <p class="text-2xl font-bold mt-2">$12,540</p>
+                </div>
+                <div class="bg-white text-gray-900 p-6 rounded-xl shadow-lg hover:scale-105 transition">
+                    <h3 class="text-xl font-semibold text-pink-800">Monthly Expenses</h3>
+                    <p class="text-2xl font-bold mt-2">$2,450</p>
+                </div>
+                <div class="bg-white text-gray-900 p-6 rounded-xl shadow-lg hover:scale-105 transition">
+                    <h3 class="text-xl font-semibold text-purple-800">Investments</h3>
+                    <p class="text-2xl font-bold mt-2">$5,230</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.querySelector('button').addEventListener('click', function() {
+            alert('Logging out...');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

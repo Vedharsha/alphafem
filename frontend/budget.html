@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Planning - AlphaFem</title>
+    <style>
+        :root {
+            --primary-color: #9c27b0;
+            --primary-dark: #7b1fa2;
+            --primary-light: #e1bee7;
+            --gradient-start: #9c27b0;
+            --gradient-end: #e91e63;
+            --red: #f44336;
+            --green: #4caf50;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray: #e0e0e0;
+            --text-dark: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--white);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .welcome {
+            margin-bottom: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: var(--gray-light);
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background-color: var(--red);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .logout-btn i {
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--white);
+            font-size: 32px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        /* Card styles */
+        .card {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Grid layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .col-12 {
+            grid-column: span 12;
+        }
+
+        .col-8 {
+            grid-column: span 8;
+        }
+
+        .col-4 {
+            grid-column: span 4;
+        }
+
+        .col-6 {
+            grid-column: span 6;
+        }
+
+        /* Budget specific styles */
+        .budget-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .budget-form input, .budget-form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .budget-list {
+            list-style: none;
+        }
+
+        .budget-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .budget-item:last-child {
+            border-bottom: none;
+        }
+
+        .budget-category {
+            font-weight: 500;
+        }
+
+        .budget-amount {
+            font-weight: 600;
+        }
+
+        .budget-progress {
+            height: 12px;
+            width: 100%;
+            background-color: var(--gray);
+            border-radius: 6px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .budget-bar {
+            height: 100%;
+            border-radius: 6px;
+        }
+
+        .budget-bar.safe {
+            background-color: var(--green);
+        }
+
+        .budget-bar.warning {
+            background-color: orange;
+        }
+
+        .budget-bar.danger {
+            background-color: var(--red);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .alert-warning {
+            background-color: #fff3e0;
+            border-left: 4px solid orange;
+            color: #e65100;
+        }
+
+        .alert-danger {
+            background-color: #ffebee;
+            border-left: 4px solid var(--red);
+            color: #c62828;
+        }
+
+        .alert i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .notification-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #757575;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="/api/placeholder/40/40" alt="AlphaFem Logo">
+                <span>AlphaFem</span>
+            </div>
+            <div class="welcome">
+                <p>Welcome,</p>
+                <p style="font-weight: bold;">Anjali</p>
+            </div>
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="expenses.html" class="nav-item">
+                <i class="fas fa-chart-line"></i> Expenses
+            </a>
+            <a href="budget.html" class="nav-item active">
+                <i class="fas fa-wallet"></i> Budget
+            </a>
+            <a href="investment.html" class="nav-item">
+                <i class="fas fa-chart-pie"></i> Investments
+            </a>
+            <a href="learn.html" class="nav-item">
+                <i class="fas fa-book"></i> Learn
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i> Community
+            </a>
+            <button class="logout-btn">
+                <a href="home.html" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Budget Planning</h1>
+                <div class="action-buttons">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-history"></i> History
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Budget
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <!-- Current Budget Overview -->
+                <div class="col-8">
+                    <div class="card">
+                        <h2 class="card-title">Your Active Budgets</h2>
+                        <ul class="budget-list">
+                            <li class="budget-item">
+                                <div style="flex: 1;">
+                                    <div class="budget-category">Shopping</div>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                        <span>Spent: ₹4,000</span>
+                                        <span class="budget-amount">Budget: ₹5,000</span>
+                                    </div>
+                                    <div class="budget-progress">
+                                        <div class="budget-bar warning" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 20px;">
+                                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 14px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li class="budget-item">
+                                <div style="flex: 1;">
+                                    <div class="budget-category">Food & Dining</div>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                        <span>Spent: ₹6,200</span>
+                                        <span class="budget-amount">Budget: ₹8,000</span>
+                                    </div>
+                                    <div class="budget-progress">
+                                        <div class="budget-bar safe" style="width: 77.5%"></div>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 20px;">
+                                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 14px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li class="budget-item">
+                                <div style="flex: 1;">
+                                    <div class="budget-category">Transportation</div>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                                        <span>Spent: ₹3,500</span>
+                                        <span class="budget-amount">Budget: ₹3,000</span>
+                                    </div>
+                                    <div class="budget-progress">
+                                        <div class="budget-bar danger" style="width: 116.6%"></div>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 20px;">
+                                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 14px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Alerts -->
+                    <div class="card">
+                        <h2 class="card-title">Active Alerts</h2>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Warning: You have spent ₹4,000 on shopping!</strong>
+                                <p>Only ₹1,000 left in your budget (80% used).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>
+                                <strong>Alert: Transportation budget exceeded!</strong>
+                                <p>You've spent ₹3,500, which is ₹500 over your budget.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Budget & History -->
+                <div class="col-4">
+                    <div class="card">
+                        <h2 class="card-title">Create New Budget</h2>
+                        <form class="budget-form">
+                            <label for="category">Category</label>
+                            <select id="category" name="category">
+                                <option value="">Select a category</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="food">Food & Dining</option>
+                                <option value="transport">Transportation</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="health">Health</option>
+                                <option value="education">Education</option>
+                                <option value="other">Other</option>
+                            </select>
+
+                            <label for="amount">Budget Amount (₹)</label>
+                            <input type="number" id="amount" name="amount" placeholder="Enter amount">
+
+                            <label for="period">Time Period</label>
+                            <select id="period" name="period">
+                                <option value="monthly">Monthly</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                Create Budget
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title">Alert History</h2>
+                        <div class="notification-history">
+                            <div class="budget-item">
+                                <div>
+                                    <div><strong>Shopping</strong> - 80% used</div>
+                                    <div style="font-size: 14px; color: #757575;">March 5, 2025</div>
+                                </div>
+                            </div>
+                            <div class="budget-item">
+                                <div>
+                                    <div><strong>Transportation</strong> - Budget exceeded</div>
+                                    <div style="font-size: 14px; color: #757575;">March 4, 2025</div>
+                                </div>
+                            </div>
+                            <div class="budget-item">
+                                <div>
+                                    <div><strong>Shopping</strong> - 70% used</div>
+                                    <div style="font-size: 14px; color: #757575;">March 2, 2025</div>
+                                </div>
+                            </div>
+                            <div class="budget-item">
+                                <div>
+                                    <div><strong>Food & Dining</strong> - 75% used</div>
+                                    <div style="font-size: 14px; color: #757575;">March 1, 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This script would handle interactions with the budget system
+        // For demonstration, this is a simple placeholder
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example for demonstrating alert logic
+            const budgetForm = document.querySelector('.budget-form');
+            
+            budgetForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const category = document.getElementById('category').value;
+                const amount = document.getElementById('amount').value;
+                const period = document.getElementById('period').value;
+                
+                if (category && amount && period) {
+                    alert(`Budget created: ₹${amount} for ${category} (${period})`);
+                    // In a real app, this would send data to the backend
+                } else {
+                    alert('Please fill all the fields');
+                }
+            });
+            
+            // This would be part of the app's notification system
+            // In a real app, this would connect to a backend service for real-time alerts
+            const simulateNotification = () => {
+                console.log("Alert system active - monitoring spending patterns");
+                // Example of how the notification logic would work
+                // When spending reaches 80% of budget:
+                // showNotification('Warning: You have spent ₹4000 on shopping! Only ₹1000 left in your budget.');
+            };
+            
+            simulateNotification();
+        });
+    </script>
+</body>
+</html>
